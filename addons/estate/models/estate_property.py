@@ -10,7 +10,6 @@ class EstateProperty(models.Model):
   _description = "Estate Property"
 
   today = fields.Datetime.now()
-
   name = fields.Char("Title",required=True)
   description = fields.Text()
   postcode = fields.Char()
@@ -39,3 +38,7 @@ class EstateProperty(models.Model):
     ],
     default='new'
   )
+  property_type_id = fields.Char("Property Type", required=True)
+  salesperson = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
+  buyer = fields.Many2one('res.partner', string="Buyer", index=True, tracking=10, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+  tag_ids = fields.Many2many('estate.property.tag', string="Tags")

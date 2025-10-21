@@ -27,6 +27,7 @@
         <field name="selling_price" />
         <field name="description" />
         <field name="postcode" />
+        <field name="tag_ids" widget="many2many_tags" />
       </list>
     </field>
   </record>
@@ -41,6 +42,7 @@
             <h1 class="mb32">
               <field name="name" />
             </h1>
+            <field name="tag_ids" widget="many2many_tags" />
           </div>
           <group>
             <group>

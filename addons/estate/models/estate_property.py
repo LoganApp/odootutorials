@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 from datetime import date, datetime, time
 from odoo.tools import date_utils
 
@@ -40,5 +40,12 @@ class EstateProperty(models.Model):
   )
   property_type_id = fields.Char("Property Type", required=True)
   salesperson = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
-  buyer = fields.Many2one('res.partner', string="Buyer", index=True, tracking=10, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+  buyer = fields.Many2one('res.partner', string="Buyer", index=True, tracking=10, copy=False, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
   tag_ids = fields.Many2many('estate.property.tag', string="Tags")
+  offer_ids = fields.One2many('estate.property.offer', 'property_id', string="Offers")
+  total_area = fields.Float(compute="_compute_total")
+
+  @api.depends('living_area', 'garden_area')
+  def _compute_total(self):
+    for record in self:
+      record.total_area = record.living_area * record.garden_area
